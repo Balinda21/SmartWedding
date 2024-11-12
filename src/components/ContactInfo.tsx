@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 const ContactInfo = () => {
   return (
@@ -25,9 +25,9 @@ const ContactInfo = () => {
             </div>
             <h3 className="text-lg font-medium mb-2">Call Us Today!</h3>
             <p className="text-gray-600">
-              (M) +250 788 123 456
+              +250 786 114 827
               <br />
-              (O) +250 788 789 012
+              +250 782 346 474
             </p>
           </div>
 
