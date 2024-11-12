@@ -1,15 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <!-- Add in the <head> section of your index.html -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Your other meta tags and content -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Smart Wedding - Your Perfect Wedding Planning Platform</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Initial loading style -->
+    <style>
+      .initial-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        z-index: 9999;
+      }
+
+      .loading-logo {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: .7;
+          transform: scale(0.95);
+        }
+      }
+
+      .loading-hearts {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .loading-heart {
+        width: 12px;
+        height: 12px;
+        background: #EC4899;
+        border-radius: 50%;
+        animation: loading-bounce 1.4s infinite ease-in-out both;
+      }
+
+      .loading-heart:nth-child(1) { animation-delay: -0.32s; }
+      .loading-heart:nth-child(2) { animation-delay: -0.16s; }
+
+      @keyframes loading-bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Initial Loading State -->
+      <div class="initial-loading">
+        <div class="loading-logo">
+          <!-- Wedding Heart Logo -->
+          <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#EC4899"/>
+            <path d="M50 75L25 45C25 35 35 25 50 25C65 25 75 35 75 45L50 75Z" fill="white"/>
+          </svg>
+          <p style="margin-top: 16px; font-family: 'Great Vibes', cursive; font-size: 24px; color: #EC4899;">
+            Smart Wedding
+          </p>
+        </div>
+        <div class="loading-hearts">
+          <div class="loading-heart"></div>
+          <div class="loading-heart"></div>
+          <div class="loading-heart"></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Remove loading screen once app is loaded -->
+    <script>
+      window.addEventListener('load', function() {
+        const loadingScreen = document.querySelector('.initial-loading');
+        if (loadingScreen) {
+          loadingScreen.style.opacity = '0';
+          loadingScreen.style.transition = 'opacity 0.5s ease-out';
+          setTimeout(() => {
+            loadingScreen.remove();
+          }, 500);
+        }
+      });
+    </script>
   </body>
 </html>
