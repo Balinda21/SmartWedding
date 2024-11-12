@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, BookOpen, Heart, ChevronRight } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
 
 interface NavItem {
   label: string;
@@ -8,23 +7,41 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "HOME", href: "/" },
-  { label: "VENUES", href: "/venues" },
-  { label: "SERVICES", href: "/services" },
-  { label: "GALLERY", href: "/gallery" },
-  { label: "PACKAGES", href: "/packages" },
-  { label: "GIFTS", href: "/gifts" },
-  { label: "CONTACT", href: "/contact" },
+  { label: "HOME", href: "#home" },
+  { label: "VENDORS", href: "#vendors" },
+  { label: "VENUES", href: "#venues" },
+  { label: "SERVICES", href: "#services" },
+  // { label: "GALLERY", href: "#gallery" },
+  { label: "GIFTS", href: "#gifts" },
+  { label: "CONTACT", href: "#contact" },
 ];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  const location = useLocation();
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
+      // Handle navbar background opacity
       setIsScrolled(window.scrollY > 20);
+
+      // Handle active section
+      const sections = document.querySelectorAll("section[id]");
+      const scrollPosition = window.scrollY + 100; // Offset for navbar
+
+      sections.forEach((section) => {
+        const sectionTop = (section as HTMLElement).offsetTop;
+        const sectionHeight = section.clientHeight;
+        const sectionId = section.getAttribute("id") || "";
+
+        if (
+          scrollPosition >= sectionTop &&
+          scrollPosition < sectionTop + sectionHeight
+        ) {
+          setActiveSection(sectionId);
+        }
+      });
     };
 
     if (isOpen) {
@@ -40,6 +57,22 @@ const Navbar: React.FC = () => {
     };
   }, [isOpen]);
 
+  const scrollToSection = (href: string) => {
+    setIsOpen(false); // Close mobile menu
+    const element = document.querySelector(href);
+    if (element) {
+      const navbarHeight = 80; // Height of your navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <>
       <nav
@@ -50,8 +83,11 @@ const Navbar: React.FC = () => {
         <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <div className="flex-shrink-0">
-              <a href="/" className="flex items-center gap-3 group">
+            <button
+              onClick={() => scrollToSection("#home")}
+              className="flex-shrink-0"
+            >
+              <div className="flex items-center gap-3 group">
                 <Heart
                   size={24}
                   className="text-pink-400 transform group-hover:scale-110 transition-transform duration-300 fill-current"
@@ -64,27 +100,37 @@ const Navbar: React.FC = () => {
                     Create Your Story
                   </span>
                 </div>
-              </a>
-            </div>
+              </div>
+            </button>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center">
               {navItems.map((item) => (
-                <Link
+                <button
                   key={item.label}
-                  to={item.href}
+                  onClick={() => scrollToSection(item.href)}
                   className={`text-white px-6 py-2 text-[13px] font-medium tracking-wider uppercase 
                     transition-all duration-300 hover:text-pink-400 relative
-                    ${location.pathname === item.href ? "text-pink-400" : ""}
+                    ${
+                      activeSection === item.href.slice(1)
+                        ? "text-pink-400"
+                        : ""
+                    }
                     after:content-[''] after:absolute after:w-0 after:h-0.5 
                     after:bg-pink-400 after:left-1/2 after:bottom-1 
                     after:transition-all after:duration-300 
-                    hover:after:w-1/2 hover:after:left-1/4`}
+                    hover:after:w-1/2 hover:after:left-1/4
+                    ${
+                      activeSection === item.href.slice(1)
+                        ? "after:w-1/2 after:left-1/4"
+                        : ""
+                    }`}
                 >
                   {item.label}
-                </Link>
+                </button>
               ))}
               <button
+                onClick={() => scrollToSection("#contact")}
                 className="ml-6 bg-white text-black px-6 py-2 text-[13px] 
                 font-medium tracking-wider uppercase transition-all duration-300 
                 hover:bg-white/90 flex items-center gap-2 rounded"
@@ -137,13 +183,12 @@ const Navbar: React.FC = () => {
           {/* Navigation Links */}
           <div className="py-4">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.label}
-                to={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`flex items-center justify-between px-6 py-4 
+                onClick={() => scrollToSection(item.href)}
+                className={`flex items-center justify-between w-full px-6 py-4 
                   ${
-                    location.pathname === item.href
+                    activeSection === item.href.slice(1)
                       ? "bg-pink-50 text-pink-500"
                       : "text-gray-700 hover:bg-gray-50"
                   }
@@ -153,15 +198,20 @@ const Navbar: React.FC = () => {
                 <ChevronRight
                   size={20}
                   className={`transform transition-transform duration-200
-                    ${location.pathname === item.href ? "translate-x-1" : ""}`}
+                    ${
+                      activeSection === item.href.slice(1)
+                        ? "translate-x-1"
+                        : ""
+                    }`}
                 />
-              </Link>
+              </button>
             ))}
           </div>
 
           {/* Book Now Button */}
           <div className="absolute bottom-0 left-0 right-0 p-6 border-t">
             <button
+              onClick={() => scrollToSection("#contact")}
               className="w-full bg-white border-2 border-black text-black py-3 rounded-full 
               font-medium tracking-wider hover:bg-black hover:text-white
               transition-all duration-300 flex items-center justify-center gap-2"
